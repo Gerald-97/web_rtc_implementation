@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import 'call_screen.dart';
 import '../services/signalling.service.dart';
 
@@ -15,17 +16,18 @@ class _JoinScreenState extends State<JoinScreen> {
   dynamic incomingSDPOffer;
   final remoteCallerIdTextEditingController = TextEditingController();
 
+  void initializeSocketStream() async {}
+
   @override
   void initState() {
-    super.initState();
-
-    // listen for incoming video call
-    SignallingService.instance.socket!.on("newCall", (data) {
-      if (mounted) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // listen for incoming video call
+      socket.on("newCall", (data) {
         // set SDP Offer of incoming call
         setState(() => incomingSDPOffer = data);
-      }
+      });
     });
+    super.initState();
   }
 
   // join Call

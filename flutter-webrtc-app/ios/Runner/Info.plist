@@ -48,8 +48,8 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) Camera Usage!</string>
+	<string>Test app needs Camera Usage!</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>$(PRODUCT_NAME) Microphone Usage!</string>
+	<string>Test app needs Microphone Usage!</string>
 </dict>
 </plist>

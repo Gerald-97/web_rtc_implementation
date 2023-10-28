@@ -5,6 +5,7 @@ import '../services/signalling.service.dart';
 class CallScreen extends StatefulWidget {
   final String callerId, calleeId;
   final dynamic offer;
+
   const CallScreen({
     super.key,
     this.offer,
@@ -18,7 +19,7 @@ class CallScreen extends StatefulWidget {
 
 class _CallScreenState extends State<CallScreen> {
   // socket instance
-  final socket = SignallingService.instance.socket;
+  // final socket = SignallingService.instance.socket;
 
   // videoRenderer for localPeer
   final _localRTCVideoRenderer = RTCVideoRenderer();
@@ -95,7 +96,7 @@ class _CallScreenState extends State<CallScreen> {
     // for Incoming call
     if (widget.offer != null) {
       // listen for Remote IceCandidate
-      socket!.on("IceCandidate", (data) {
+      socket.on("IceCandidate", (data) {
         String candidate = data["iceCandidate"]["candidate"];
         String sdpMid = data["iceCandidate"]["id"];
         int sdpMLineIndex = data["iceCandidate"]["label"];
@@ -120,7 +121,7 @@ class _CallScreenState extends State<CallScreen> {
       _rtcPeerConnection!.setLocalDescription(answer);
 
       // send SDP answer to remote peer over signalling
-      socket!.emit("answerCall", {
+      socket.emit("answerCall", {
         "callerId": widget.callerId,
         "sdpAnswer": answer.toMap(),
       });
@@ -132,7 +133,7 @@ class _CallScreenState extends State<CallScreen> {
           (RTCIceCandidate candidate) => rtcIceCadidates.add(candidate);
 
       // when call is accepted by remote peer
-      socket!.on("callAnswered", (data) async {
+      socket.on("callAnswered", (data) async {
         // set SDP answer as remoteDescription for peerConnection
         await _rtcPeerConnection!.setRemoteDescription(
           RTCSessionDescription(
@@ -143,7 +144,7 @@ class _CallScreenState extends State<CallScreen> {
 
         // send iceCandidate generated to remote peer over signalling
         for (RTCIceCandidate candidate in rtcIceCadidates) {
-          socket!.emit("IceCandidate", {
+          socket.emit("IceCandidate", {
             "calleeId": widget.calleeId,
             "iceCandidate": {
               "id": candidate.sdpMid,
@@ -161,7 +162,7 @@ class _CallScreenState extends State<CallScreen> {
       await _rtcPeerConnection!.setLocalDescription(offer);
 
       // make a call to remote peer over signalling
-      socket!.emit('makeCall', {
+      socket.emit('makeCall', {
         "calleeId": widget.calleeId,
         "sdpOffer": offer.toMap(),
       });
